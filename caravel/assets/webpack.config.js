@@ -10,6 +10,9 @@ const BUILD_DIR = path.resolve(__dirname, './dist');
 
 const VERSION_STRING = JSON.parse(fs.readFileSync('package.json')).version;
 
+var babelrc = fs.readFileSync('./.babelrc');
+var babelLoaderQuery = JSON.parse(babelrc);
+
 const config = {
   entry: {
     'css-theme': APP_DIR + '/javascripts/css-theme.js',
@@ -96,6 +99,21 @@ const config = {
         test: /\.js$/,
         include: APP_DIR + '/node_modules/mapbox-gl/js/render/painter/use_program.js',
         loader: 'transform/cacheable?brfs',
+      },
+      {
+        test: /\.css?$/,
+        include: APP_DIR + 'node_modules/react-persian-datepicker/lib/styles',
+        loader: 'style!css?modules&importLoaders=1'
+      },
+      {
+        test: /\.css?$/,
+        include: APP_DIR + 'node_modules/react-persian-datepicker/lib/styles',
+        loader: 'style!css'
+      },
+      {
+        test: /\.jsx?$/,
+        include: APP_DIR + 'node_modules/react-persian-datepicker/lib',
+        loaders: 'babel'
       },
     ],
     postLoaders: [{

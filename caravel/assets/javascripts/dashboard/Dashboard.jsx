@@ -141,7 +141,7 @@ function dashboardContainer(dashboardData) {
       }
       this.updateFilterParamsInUrl();
     },
-    readFilters() {
+  readFilters() {
       // Returns a list of human readable active filters
       return JSON.stringify(this.filters, null, 4);
     },

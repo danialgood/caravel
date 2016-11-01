@@ -222,11 +222,11 @@ const px = function () {
       addFilter(col, vals) {
         controller.addFilter(sliceId, col, vals);
       },
-      setFilter(col, vals) {
-        controller.setFilter(sliceId, col, vals);
-      },
       getFilters() {
         return controller.filters[sliceId];
+      },
+      setFilter(col, vals, refresh = true) {
+        controller.setFilter(sliceId, col, vals, refresh);
       },
       clearFilter() {
         controller.clearFilter(sliceId);
