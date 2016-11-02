@@ -58,8 +58,8 @@ class FilterBox extends React.Component {
         const end = value.endOf('day').format('YYYY-M-D HH:mm:ss');
         this.state.selectedValues['__from'] = start;
         this.state.selectedValues['__to'] = end;
-        this.changeFilter('__from', start, false);
-        this.changeFilter('__to', end);
+        this.changeFilter('__from', {value: start, label: start}, false);
+        this.changeFilter('__to', {value: end, label: end});
     }
 
     render() {
