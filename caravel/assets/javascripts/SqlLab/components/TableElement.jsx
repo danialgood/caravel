@@ -5,12 +5,13 @@ import shortid from 'shortid';
 
 import CopyToClipboard from '../../components/CopyToClipboard';
 import Link from './Link';
+import ColumnElement from './ColumnElement';
 import ModalTrigger from '../../components/ModalTrigger';
 
 const propTypes = {
   table: React.PropTypes.object,
   actions: React.PropTypes.object,
-  timeout: React.PropTypes.integer,  // used for tests
+  timeout: React.PropTypes.number,  // used for tests
 };
 
 const defaultProps = {
@@ -50,18 +51,7 @@ class TableElement extends React.PureComponent {
 
   removeTable() {
     this.setState({ expanded: false });
-  }
-  dataPreviewModal() {
-    const query = {
-      dbId: this.props.table.dbId,
-      sql: this.props.table.selectStar,
-      tableName: this.props.table.name,
-      sqlEditorId: null,
-      tab: '',
-      runAsync: false,
-      ctas: false,
-    };
-    this.props.actions.runQuery(query);
+    this.props.actions.removeDataPreview(this.props.table);
   }
   toggleSortColumns() {
     this.setState({ sortColumns: !this.state.sortColumns });
@@ -119,21 +109,9 @@ class TableElement extends React.PureComponent {
         <div>
           {this.renderHeader()}
           <div className="table-columns">
-            {cols && cols.map((col) => {
-              let name = col.name;
-              if (col.indexed) {
-                name = <strong>{col.name}</strong>;
-              }
-              return (
-                <div className="clearfix table-column" key={shortid.generate()}>
-                  <div className="pull-left m-l-10 col-name">
-                    {name}
-                  </div>
-                  <div className="pull-right text-muted">
-                    <small> {col.type}</small>
-                  </div>
-                </div>);
-            })}
+            {cols && cols.map(col => (
+              <ColumnElement column={col} key={col.name} />
+            ))}
             <hr />
           </div>
         </div>
@@ -147,7 +125,6 @@ class TableElement extends React.PureComponent {
 
   render() {
     const table = this.props.table;
-
     let keyLink;
     if (table.indexes && table.indexes.length > 0) {
       keyLink = (
@@ -157,13 +134,13 @@ class TableElement extends React.PureComponent {
               Keys for table <strong>{table.name}</strong>
             </div>
           }
-          modalBody={
-            <pre>{JSON.stringify(table.indexes, null, 4)}</pre>
-          }
+          modalBody={table.indexes.map((ix, i) => (
+            <pre key={i}>{JSON.stringify(ix, null, '  ')}</pre>
+          ))}
           triggerNode={
             <Link
               className="fa fa-key pull-left m-l-2"
-              tooltip={`View indexes (${table.indexes.length})`}
+              tooltip={`View keys & indexes (${table.indexes.length})`}
             />
           }
         />
@@ -204,12 +181,6 @@ class TableElement extends React.PureComponent {
                     'Original table column order'}
                   href="#"
                 />
-                <Link
-                  className="fa fa-search-plus pull-left m-l-2"
-                  onClick={this.dataPreviewModal.bind(this)}
-                  tooltip="Data preview"
-                  href="#"
-                />
                 {table.selectStar &&
                   <CopyToClipboard
                     copyNode={
@@ -223,7 +194,7 @@ class TableElement extends React.PureComponent {
                 <Link
                   className="fa fa-trash table-remove pull-left m-l-2"
                   onClick={this.removeTable.bind(this)}
-                  tooltip="Remove from panel"
+                  tooltip="Remove table preview"
                   href="#"
                 />
               </ButtonGroup>
