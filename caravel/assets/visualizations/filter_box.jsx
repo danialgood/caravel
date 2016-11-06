@@ -9,10 +9,13 @@ import Select from 'react-select';
 import '../stylesheets/react-select/select.less';
 
 import './filter_box.css';
-import {TIME_CHOICES} from './constants.js';
+import {TIME_CHOICES, SHIFT_CHOICES, SHIFT_INTERVALS} from './constants.js';
 
 import {Calendar, DatePicker} from 'react-persian-datepicker';
 import '../stylesheets/react-persian-datepicker/basic.css'
+
+import jMoment from 'moment-jalali'
+
 
 const propTypes = {
     origSelectedValues: React.PropTypes.object,
@@ -53,6 +56,7 @@ class FilterBox extends React.Component {
     }
 
     changeDatePickerFilter(filter, value) {
+        this.state.selectedValues[filter] = value;
         const offset = value.utcOffset();
         const start = value.startOf('day').format('YYYY-M-D HH:mm:ss');
         const end = value.endOf('day').format('YYYY-M-D HH:mm:ss');
@@ -62,9 +66,28 @@ class FilterBox extends React.Component {
         this.changeFilter('__to', {value: end, label: end});
     }
 
+    changeShiftFilter(filter,options){
+
+        this.state.selectedValues[filter] = options.value;
+        const offset = this.state.selectedValues['day'].utcOffset();
+        const start = this.state.selectedValues['day'].startOf('day').clone();
+        const start2 = this.state.selectedValues['day'].startOf('day').clone();
+        console.log(SHIFT_INTERVALS);
+        // console.log("day start : ", start.add(jMoment.duration(SHIFT_INTERVALS[options.value][0])));
+        const shiftStart = start.add(jMoment.duration(SHIFT_INTERVALS[options.value][0])).subtract(offset, 'minutes').format('YYYY-M-D HH:mm:ss');
+        const shiftEnd = start2.add(jMoment.duration(SHIFT_INTERVALS[options.value][1])).subtract(offset, 'minutes').format('YYYY-M-D HH:mm:ss');
+
+        this.state.selectedValues['__from'] = shiftStart;
+        this.state.selectedValues['__to'] = shiftEnd;
+        this.changeFilter('__from', {value: shiftStart, label: shiftStart}, false);
+        this.changeFilter('__to', {value: shiftEnd, label: shiftEnd});
+    }
+
+
     render() {
         let dateFilter;
         let customDateFilter;
+        let shiftFilter;
         if (this.props.showDateFilter) {
             dateFilter = ['__from', '__to'].map((field) => {
                 const val = this.state.selectedValues[field];
@@ -97,6 +120,28 @@ class FilterBox extends React.Component {
                     </div>
                 );
             });
+
+            shiftFilter = ['shift'].map((field) => {
+                const choices = SHIFT_CHOICES.slice();
+                const val = this.state.selectedValues[field];
+                if (!choices.includes(val)) {
+                    choices.push(val);
+                }
+                const options = choices.map((s) => ({value: s, label: s}));
+                console.log("opt ", options);
+
+                return (
+                   <div>
+                      {field}
+                      <Select.Creatable
+                          options={options}
+                          value={this.state.selectedValues[field]}
+                          onChange={this.changeShiftFilter.bind(this, field)}
+                        />
+                   </div>
+                );
+
+          });
         }
         const filters = Object.keys(this.props.filtersChoices).map((filter) => {
             const data = this.props.filtersChoices[filter];
@@ -132,6 +177,7 @@ class FilterBox extends React.Component {
         return (
             <div>
                 {dateFilter}
+                {shiftFilter}
                 {customDateFilter}
                 {filters}
             </div>
