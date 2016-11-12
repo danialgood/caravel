@@ -9,7 +9,7 @@ Feature Overview
 ----------------
 - Connects to just about any database backend
 - A multi-tab environment to work on multiple queries at a time
-- A smooth flow to visualize your query results using Caravel's rich
+- A smooth flow to visualize your query results using Superset's rich
   visualization capabilities
 - Browse database metadata: tables, columns, indexes, partitions
 - Support for long-running queries
@@ -21,6 +21,9 @@ Feature Overview
   `Jinja templating language <http://jinja.pocoo.org/docs/dev/>`_
   which allows for using macros in your SQL code
 
+Extra features
+--------------
+- Hit ``alt + enter`` as a keyboard shortcut to run your query
 
 Templating with Jinja
 ---------------------
@@ -42,7 +45,7 @@ Available macros
 ''''''''''''''''
 
 We expose certain modules from Python's standard library in
-Caravel's Jinja context:
+Superset's Jinja context:
 - ``time``: ``time``
 - ``datetime``: ``datetime.datetime``
 - ``uuid``: ``uuid``
@@ -53,5 +56,5 @@ Caravel's Jinja context:
 `Jinja's builtin filters <http://jinja.pocoo.org/docs/dev/templates/>`_ can be also be applied where needed.
 
 
-.. autoclass:: caravel.jinja_context.PrestoContext
+.. autoclass:: superset.jinja_context.PrestoTemplateProcessor
     :members:
