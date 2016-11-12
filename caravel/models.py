@@ -1068,7 +1068,7 @@ class SqlaTable(Model, Queryable, AuditMixinNullable, ImportMixin):
         select_exprs += metrics_exprs
         qry = select(select_exprs)
 
-        groupby_exprs += ["EXTRACT(DAY FROM request_datetime)"]
+        # groupby_exprs += ["EXTRACT(DAY FROM request_datetime)"]
 
         tbl = table(self.table_name)
         if self.schema:
