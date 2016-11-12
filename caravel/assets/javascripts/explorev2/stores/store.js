@@ -132,7 +132,7 @@ export const commonControlPanelSections = {
   sqlClause: {
     label: 'SQL',
     fieldSetRows: [
-      ['where', 'having'],
+      ['where', 'having', 'sql_select'],
     ],
     description: 'This section exposes ways to include snippets of SQL in your query',
   },
@@ -1297,6 +1297,13 @@ export const fields = {
                  'clause, as an AND to other criteria. You can include ' +
                  'complex expression, parenthesis and anything else ' +
                  'supported by the backend it is directed towards.',
+  },
+
+  sql_select: {
+    type: 'TextField',
+    label: 'Custom SQL from select',
+    default: '',
+    description: 'Fuck YOUUUU',
   },
 
   having: {

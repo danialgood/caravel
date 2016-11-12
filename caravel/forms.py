@@ -641,6 +641,11 @@ class FormFactory(object):
                     "complex expression, parenthesis and anything else "
                     "supported by the backend it is directed towards.")
             }),
+            'sql_select': (TextField, {
+                "label": _("Custom SQL database select"),
+                "default": '',
+                "description": _("Fuck The Description !")
+            }),
             'compare_lag': (TextField, {
                 "label": _("Comparison Period Lag"),
                 "description": _(
@@ -1035,12 +1040,12 @@ class FormFactory(object):
         if datasource_classname == 'SqlaTable':
             QueryForm.fieldsets += ({
                 'label': _('SQL'),
-                'fields': ['where', 'having'],
+                'fields': ['where', 'having', 'sql_select'],
                 'description': _(
                     "This section exposes ways to include snippets of "
                     "SQL in your query"),
             },)
-            add_to_form(('where', 'having'))
+            add_to_form(('where', 'having', 'sql_select'))
             grains = viz.datasource.database.grains()
 
             if grains:

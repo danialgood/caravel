@@ -1065,9 +1065,10 @@ class SqlaTable(Model, Queryable, AuditMixinNullable, ImportMixin):
                     dttm_col.dttm_sql_literal(inner_to_dttm))
         else:
             inner_time_filter = []
-
         select_exprs += metrics_exprs
         qry = select(select_exprs)
+
+        groupby_exprs += ["EXTRACT(DAY FROM request_datetime)"]
 
         tbl = table(self.table_name)
         if self.schema:
@@ -1076,6 +1077,10 @@ class SqlaTable(Model, Queryable, AuditMixinNullable, ImportMixin):
         # Supporting arbitrary SQL statements in place of tables
         if self.sql:
             tbl = TextAsFrom(sqla.text(self.sql), []).alias('expr_qry')
+
+        if extras:
+            if extras.get('sql_select'):
+                tbl = TextAsFrom(sqla.text(extras.get('sql_select')), []).alias('expr_qry')
 
         if not columns:
             qry = qry.group_by(*groupby_exprs)
