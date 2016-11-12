@@ -108,21 +108,6 @@ const config = {
         include: APP_DIR + '/node_modules/mapbox-gl/js/render/painter/use_program.js',
         loader: 'transform/cacheable?brfs',
       },
-      {
-        test: /\.css?$/,
-        include: APP_DIR + 'node_modules/react-persian-datepicker/lib/styles',
-        loader: 'style!css?modules&importLoaders=1'
-      },
-      {
-        test: /\.css?$/,
-        include: APP_DIR + 'node_modules/react-persian-datepicker/lib/styles',
-        loader: 'style!css'
-      },
-      {
-        test: /\.jsx?$/,
-        include: APP_DIR + 'node_modules/react-persian-datepicker/lib',
-        loaders: 'babel'
-      },
     ],
     postLoaders: [{
       include: /node_modules\/mapbox-gl/,
@@ -146,4 +131,4 @@ const config = {
 if (process.env.NODE_ENV === 'production') {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
-module.exports = config;
+module.exports = config

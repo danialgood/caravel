@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: caravel
+Version: 0.12.0
+Summary: A interactive data visualization platform build on SqlAlchemy and druid.io
+Home-page: https://github.com/airbnb/caravel
+Author: Maxime Beauchemin
+Author-email: maximebeauchemin@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/airbnb/caravel/tarball/0.12.0
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
