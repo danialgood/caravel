@@ -74,6 +74,7 @@ class PostgresEngineSpec(BaseEngineSpec):
         Grain("hour", _('hour'), "DATE_TRUNC('hour', {col})"),
         Grain("day", _('day'), "DATE_TRUNC('day', {col})"),
         Grain("week", _('week'), "DATE_TRUNC('week', {col})"),
+        Grain("week_starting_saturday", _('week_starting_saturday'), "(DATE_TRUNC('week', ({col} + '2 DAYS')) - '2 DAYS'::INTERVAL)::TIMESTAMP"),
         Grain("month", _('month'), "DATE_TRUNC('month', {col})"),
         Grain("quarter", _('quarter'), "DATE_TRUNC('quarter', {col})"),
         Grain("year", _('year'), "DATE_TRUNC('year', {col})"),
