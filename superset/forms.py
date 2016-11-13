@@ -255,6 +255,11 @@ class FormFactory(object):
                 "default": False,
                 "description": _("Sort bars by x labels."),
             }),
+            'order_numeric_bars': (BetterBooleanField, {
+                "label": _("Sort Bars (Numerically)"),
+                "default": False,
+                "description": _("Sort bars by x labels (Numerically)."),
+            }),
             'show_controls': (BetterBooleanField, {
                 "label": _("Extra Controls"),
                 "default": False,

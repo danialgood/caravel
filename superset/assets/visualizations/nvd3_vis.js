@@ -170,6 +170,17 @@ function nvd3Vis(slice) {
                 );
               });
             }
+            if (fd.order_numeric_bars) {
+              payload.data.forEach((d) => {
+                d.values.sort(
+                  function compare(a, b) {
+                    if (parseFloat(a.x) < parseFloat(b.x)) return -1;
+                    if (parseFloat(a.x) > parseFloat(b.x)) return 1;
+                    return 0;
+                  }
+                );
+              });
+            }
             if (fd.show_bar_value) {
               setTimeout(function () {
                 addTotalBarValues(chart, payload.data, stacked);
