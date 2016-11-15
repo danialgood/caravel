@@ -34,7 +34,7 @@ def start():
 def stop():
     with virtualenv():
         print('Stopping Superset Server...')
-        run('kill -QUIT -F ./gunicorn.pid')
+        run('kill -QUIT $(cat %s)' % env.gpid)
 
 
 def reload():
