@@ -1,11 +1,17 @@
 from contextlib import contextmanager as _contextmanager
 
-from fabric.context_managers import cd, prefix
+from fabric.context_managers import cd, prefix, lcd
 from fabric.operations import local, run
 from fabric.state import env
 
+from fabric.contrib.project import rsync_project
+
 from superset import app
 config = app.config
+
+import os
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 env.hosts = ['139.59.179.46']
 env.user = 'caravel'
@@ -38,12 +44,15 @@ def stop():
 
 
 def reload():
-    run('uwsgi --reload ./uwsgi.pid')
+    with virtualenv():
+        print('Restarting Superset Server...')
+        run('kill -HUP $(cat %s)' % env.gpid)
 
 
 def pull():
-    print('\npull..')
-    run('git pull')
+    with cd(env.directory):
+        print('\npull..')
+        run('git pull')
 
 
 def migrate():
@@ -57,25 +66,50 @@ def collect_static():
 
 
 def install_dependencies():
-    print('\ninstalling dependencies')
-    run('pip install -r ./requirements.txt')
+    with cd(env.directory):
+        print('\ninstalling dependencies')
+        run('pip3 install -r ./requirements.txt')
 
+def rebuild():
+    with virtualenv():
+        print('\nrebuilding app')
+        run('python3 setup.py install')
 
 def push():
     print('\npush..')
-    local('git push')
+    local('git push -u origin master')
+
+def build_frontend():
+    print('\nbuilding frontend app')
+    with lcd(os.path.join(BASE_DIR, 'superset/assets')):
+        local('npm run prod')
+
+
+def rsync_frontend():
+    print('\n rsyncing frontend app')
+    rsync_project(remote_dir="caravel/superset/assets/dist/", local_dir="assets/dist/")
 
 
 def collect():
     with virtualenv():
         collect_static()
 
-
-def deploy():
+def bdeploy():
     push()
     with virtualenv():
         pull()
         clear_cached_files()
         install_dependencies()
-        migrate()
+        rebuild()
+        reload()
+
+def deploy():
+    push()
+    build_frontend()
+    rsync_frontend()
+    with virtualenv():
+        pull()
+        clear_cached_files()
+        install_dependencies()
+        rebuild()
         reload()
