@@ -37,7 +37,10 @@ manager.add_command('db', MigrateCommand)
 @manager.option(
     '-t', '--timeout', default=config.get("SUPERSET_WEBSERVER_TIMEOUT"),
     help="Specify the timeout (seconds) for the gunicorn web server")
-def runserver(debug, address, port, timeout, workers):
+@manager.option(
+    '-P', '--pid', default=config.get("SUPERSET_GUNICORN_PID_DIR"),
+    help="Specify the file which gunicorn pid should be stored in")
+def runserver(debug, address, port, timeout, workers, pid):
     """Starts a Superset web server"""
     debug = debug or config.get("DEBUG")
     if debug:
@@ -54,6 +57,7 @@ def runserver(debug, address, port, timeout, workers):
             "-b {address}:{port} "
             "--limit-request-line 0 "
             "--limit-request-field_size 0 "
+            "--pid {pid} "
             "superset:app").format(**locals())
         print("Starting server with command: " + cmd)
         Popen(cmd, shell=True).wait()

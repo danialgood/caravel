@@ -36,6 +36,8 @@ SUPERSET_WEBSERVER_ADDRESS = '0.0.0.0'
 SUPERSET_WEBSERVER_PORT = 8088
 SUPERSET_WEBSERVER_TIMEOUT = 60
 
+SUPERSET_GUNICORN_PID_DIR = os.path.join(BASE_DIR, '../gunicorn.pid')
+
 CUSTOM_SECURITY_MANAGER = None
 # ---------------------------------------------------------
 
